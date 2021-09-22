@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import allContacts from './contacts.json';
+import ContactsList from './ContactsList';
+import SearchField from './SearchField';
 import './App.css';
 
 function App() {
 
   const [contacts, setContacts] = useState(allContacts.slice(0, 5))
+  const [query, setQuery] = useState('');
 
   const deleteContact = contactId => {
     setContacts(contacts => contacts.filter(contact => contact.id !== contactId))
@@ -42,7 +45,7 @@ function App() {
     <div className='App'>
 
       <h1>IronContacts</h1>
-
+      <SearchField setQueryProp={setQuery} />
       <button onClick={addContact}>Add Random Contact</button>
       <button onClick={sortByName}>Sort by name</button>
       <button onClick={sortByPopularity}>Sort by popularity</button>
@@ -59,28 +62,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {contacts.map(contact => {
-              return (
-                <tr key={contact.id}>
-                  <td>
-                    <img
-                      src={contact.pictureUrl}
-                      height='100px'
-                      alt={contact.name}
-                    />
-                  </td>
-                  <td>{contact.name}</td>
-                  <td>{contact.popularity.toFixed(2)}</td>
-                  <td>{contact.wonOscar && '🏆'}</td>
-                  <td>{contact.wonEmmy && '🏆'}</td>
-                  <td>
-                    <button onClick={() => { deleteContact(contact.id) }}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            <ContactsList queryProp={query} contacts={contacts} deleteContactProp={deleteContact} />
           </tbody>
         </table>
       </div>
